@@ -12,6 +12,7 @@ struct HackingWithSwiftUI_EdutainmentApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
         }
     }
 }
