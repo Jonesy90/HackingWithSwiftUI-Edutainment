@@ -46,7 +46,7 @@ struct ContentView: View {
     @State private var questionNumber = 0
     @State private var isGameOver = false
     
-    /// An enum to represent the three possible states: neutral (black), correct (green) and incorrect (red).
+    // An enum to represent the three possible states: neutral (black), correct (green) and incorrect (red).
     enum AnswerState {
         case neutral
         case correct
