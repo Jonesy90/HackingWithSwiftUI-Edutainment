@@ -83,17 +83,19 @@ struct ContentView: View {
                 
                 VStack {
                     Form {
-                        Section("Multiplication Table?") {
-                            Stepper("\(selectedMultiplicationTable) times table", value: $selectedMultiplicationTable, in: 2...12, step: 1)
-                        }
-                        
-                        Section("Number of Questions?") {
-                            Picker("Number of Questions?", selection: $selectedNumberOfQuestions) {
-                                ForEach([5, 10, 15, 20], id: \.self) {
-                                    Text("\($0)")
-                                }
+                        if !isActive {
+                            Section("Multiplication Table?") {
+                                Stepper("\(selectedMultiplicationTable) times table", value: $selectedMultiplicationTable, in: 2...12, step: 1)
                             }
-                            .pickerStyle(.segmented)
+                            
+                            Section("Number of Questions?") {
+                                Picker("Number of Questions?", selection: $selectedNumberOfQuestions) {
+                                    ForEach([5, 10, 15, 20], id: \.self) {
+                                        Text("\($0)")
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                            }
                         }
                         if isActive {
                             Section("Answer") {
