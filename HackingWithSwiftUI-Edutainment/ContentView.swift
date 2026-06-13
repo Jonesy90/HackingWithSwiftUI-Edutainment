@@ -36,6 +36,22 @@ struct Question: Identifiable {
     }
 }
 
+struct QuestionCard: View {
+    let question: Question
+    let answerState: ContentView.AnswerState
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(answerState == .neutral ? Color.gray : (answerState == .correct ? Color.green : Color.red))
+                .frame(width: 300, height: 150)
+            Text("\(question.randomNumber) x \(question.multiplicationNumber)")
+                .font(.title.bold())
+                .foregroundStyle(.white)
+        }
+    }
+}
+
 struct ContentView: View {
     @FocusState private var keyboardInFocus: Bool
     @State private var isActive = false
@@ -53,27 +69,14 @@ struct ContentView: View {
         case incorrect
     }
     @State private var answerState: AnswerState = .neutral
-    
     @State private var answer = Int()
     
     var body: some View {
         NavigationStack {
             VStack {
                 VStack {
-                    ZStack {
-                        if isActive {
-                            Rectangle()
-                                .fill(
-                                    answerState == .neutral ? Color.gray : (answerState == .correct ? Color.green : Color.red)
-                                )
-                                .frame(width: 300, height: 150)
-                                .clipShape(.rect(cornerRadius: 20))
-                                .padding()
-                            
-                            Text("\(questions[questionNumber].randomNumber) x \(questions[questionNumber].multiplicationNumber)")
-                                .font(.title.bold())
-                                .foregroundStyle(.white)
-                        }
+                    if isActive {
+                        QuestionCard(question: questions[questionNumber], answerState: answerState)
                     }
                 }
                 
@@ -92,30 +95,30 @@ struct ContentView: View {
                             .pickerStyle(.segmented)
                         }
                         
-                            Section("Answer") {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                        .fill(Color(.secondarySystemBackground))
-                                        .shadow(radius: 3)
-                                        .frame(height: 60)
-                                    HStack {
-                                        TextField("Answer", value: $answer, format: .number)
-                                            .keyboardType(.numberPad)
-                                            .multilineTextAlignment(.center)
-                                            .focused($keyboardInFocus)
-                                    }
-                                    .padding(.horizontal)
+                        Section("Answer") {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(Color(.secondarySystemBackground))
+                                    .shadow(radius: 3)
+                                    .frame(height: 60)
+                                HStack {
+                                    TextField("Answer", value: $answer, format: .number)
+                                        .keyboardType(.numberPad)
+                                        .multilineTextAlignment(.center)
+                                        .focused($keyboardInFocus)
                                 }
-                                .padding(.vertical, 4)
-                                .toolbar {
-                                    ToolbarItem(placement: .keyboard) {
-                                        Button("Check Answer") {
-                                            check(answer)
-                                            keyboardInFocus = false
-                                        }
+                                .padding(.horizontal)
+                            }
+                            .padding(.vertical, 4)
+                            .toolbar {
+                                ToolbarItem(placement: .keyboard) {
+                                    Button("Check Answer") {
+                                        check(answer)
+                                        keyboardInFocus = false
                                     }
                                 }
                             }
+                        }
                     }
                 }
             }
