@@ -61,6 +61,7 @@ struct ContentView: View {
     @State private var questions = [Question]()
     @State private var questionNumber = 0
     @State private var isGameOver = false
+    @State private var playerScore = 0
     
     // An enum to represent the three possible states: neutral (black), correct (green) and incorrect (red).
     enum AnswerState {
@@ -94,27 +95,28 @@ struct ContentView: View {
                             }
                             .pickerStyle(.segmented)
                         }
-                        
-                        Section("Answer") {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .fill(Color(.secondarySystemBackground))
-                                    .shadow(radius: 3)
-                                    .frame(height: 60)
-                                HStack {
-                                    TextField("Answer", value: $answer, format: .number)
-                                        .keyboardType(.numberPad)
-                                        .multilineTextAlignment(.center)
-                                        .focused($keyboardInFocus)
+                        if isActive {
+                            Section("Answer") {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .fill(Color(.secondarySystemBackground))
+                                        .shadow(radius: 3)
+                                        .frame(height: 60)
+                                    HStack {
+                                        TextField("Answer", value: $answer, format: .number)
+                                            .keyboardType(.numberPad)
+                                            .multilineTextAlignment(.center)
+                                            .focused($keyboardInFocus)
+                                    }
+                                    .padding(.horizontal)
                                 }
-                                .padding(.horizontal)
-                            }
-                            .padding(.vertical, 4)
-                            .toolbar {
-                                ToolbarItem(placement: .keyboard) {
-                                    Button("Check Answer") {
-                                        check(answer)
-                                        keyboardInFocus = false
+                                .padding(.vertical, 4)
+                                .toolbar {
+                                    ToolbarItem(placement: .keyboard) {
+                                        Button("Check Answer") {
+                                            check(answer)
+                                            keyboardInFocus = false
+                                        }
                                     }
                                 }
                             }
@@ -135,9 +137,11 @@ struct ContentView: View {
                 }
             }
             .alert("Game Over!", isPresented: $isGameOver) {
-                Button("Okay") { }
+                Button("Okay") {
+                    resetGame()
+                }
             } message: {
-                Text("Final Score: ??/\(selectedNumberOfQuestions)")
+                Text("Final Score: \(playerScore)/\(selectedNumberOfQuestions)")
             }
         }
     }
@@ -155,11 +159,15 @@ struct ContentView: View {
     private func resetGame() {
         questions.removeAll()
         isActive = false
+        playerScore = 0
+        questionNumber = 0
+        answer = 0
     }
     
     private func check(_ userAnswer: Int) {
         if questions[questionNumber].answer == userAnswer {
             answerState = .correct
+            playerScore += 1
         } else {
             answerState = .incorrect
         }
@@ -169,11 +177,11 @@ struct ContentView: View {
             answerState = .neutral
             guard questionNumber < questions.count - 1 else {
                 isGameOver = true
-                resetGame()
                 return
             }
             
             questionNumber += 1
+            answer = 0
         }
     }
 }
