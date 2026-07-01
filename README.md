@@ -8,7 +8,7 @@ The goal of this task is to build an "Edutainment" app for kids to help them pra
 2. The player should be able to select how many questions they want to be asked (E.g., 5, 10, 15 or 20).
 3. The app should randomly generate as many questions as they asked for, within the difficulty range that was asked.
 
-## What I learn't
+## What I Learned
 With this challenge, there isn't an option to see the teachers version of the app. I had to take what I learn't in the previous projects and find my own way to create "my" version of the app to complete this task.
 
 - I thought this was the perfect scenario to create a Question struct which holds the structure of what a Question contains (randomNumner, multiplicationNumber and answer).
